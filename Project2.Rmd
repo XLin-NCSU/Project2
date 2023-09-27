@@ -1,10 +1,103 @@
 ---
 title: "Project 2"
 author: "Xi Lin"
-date: "2023-09-27"
-output: html_document
+date: "2023-09-26"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+The aim of this project is to show how to retrieve data from an API and analyze the data. Since I love playing Clash Royale, an mobile game, I would use the API provided by its developer, Supercell company, to demonstrate the tasks.
+
+![image](clash-royale.jpg)
+
+You could get the clan's data, player's data and cards' data. Since Supercell limits the access of API by IP address, please provide me your IP address and I will email you your token. 
+
+## Requirements
+
+The packages that I used in this project:
+
+- `httr`: API interaction
+- `jsonlite`: parse the data
+- `tidyverse`: data manipulation and visualization
+
+```{r load packages, message=FALSE, warning=FALSE, include=FALSE}
+library(jsonlite)
+library(tidyverse)
+```
+
+## API Interaction Functions
+
+`InputToken`
+
+This function enables you to input the token when retrieving data. This function also sets up some Authorization work.
+
+```{r}
+InputToken = function(token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA"){
+  return(token)
+}
+
+bearer_token = InputToken()
+
+headers <- c(`Authorization` = sprintf('Bearer %s', bearer_token))
+```
+
+
+`lastseendate`
+
+This function is to deal with correcting last seen date in clan data.
+
+```{r}
+lastseendate = function(data){
+  lastSeen <- substr(data$lastSeen, 1, 8)
+  lastSeen <- as.Date(data$lastSeen, "%Y%m%d")
+}
+```
+
+
+`clan`
+
+This function enables you to get all clan members' basic performance info by simply input the clan tag. The default clan is the one that I am in. Be careful that don't forget the single quotes. Correct input format: `'#8YVVGR2Y'`
+
+```{r}
+clan = function(clantag = '#8YVVGR2Y'){
+
+url = paste0("https://api.clashroyale.com/v1/clans/",'%23',substr(clantag, 2, nchar(clantag)))
+
+rawclandata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+
+clandata <- jsonlite::fromJSON(rawToChar(rawclandata$content))
+
+memberList <- clandata$memberList
+
+memberList$lastSeen <- lastseendate(memberList)
+
+return(memberList)
+}
+
+
+```
+
+`player`
+
+This function enables you to get information of a specific player based on player tag.
+
+```{r}
+player = function(playertag = '#8208VRQL'){
+
+url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(player, 2, nchar(player)))
+
+rawplayerdata <- httr::GET(url = "https://api.clashroyale.com/v1/players/%238208VRQL", httr::add_headers(.headers = headers))
+
+rawplayerdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+
+playerdata <- jsonlite::fromJSON(rawToChar(rawplayerdata$content))
+
+PlayerInfo <- playerdata[1:19]
+
+PlayerInfo <- do.call(rbind, PlayerInfo)
+#memberList$lastSeen <- lastseendate(memberList)
+
+#return(memberList)
+}
