@@ -8,19 +8,19 @@ date: "2023-09-26"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The aim of this project is to show how to retrieve data from an API and analyze the data. Since I love playing Clash Royale, an mobile game, I would use the API provided by its developer, Supercell company, to demonstrate the tasks.
+The aim of this project is to show how to retrieve data from an API and analyze the data. Since I am playing Clash Royale(a mobile game), I would use the API provided by its developer, Supercell company, to demonstrate the work. The website of the API is [here](https://developer.clashroyale.com/).
 
 ![image](clash-royale.jpg)
 
-You could get the clan's data, player's data and cards' data. Since Supercell limits the access of API by IP address, please provide me your IP address and I will email you your token. 
+In this project, you could get the clan's data and player's data. Since Supercell limits the access of API by IP address, please provide me your IP address and I will email your token to you.
 
 ## Requirements
 
 The packages that I used in this project:
 
-- `httr`: API interaction
-- `jsonlite`: parse the data
-- `tidyverse`: data manipulation and visualization
+-   `httr`: API interaction
+-   `jsonlite`: parse the data
+-   `tidyverse`: data manipulation and visualization
 
 ```{r load packages, message=FALSE, warning=FALSE, include=FALSE}
 library(jsonlite)
@@ -43,7 +43,6 @@ bearer_token = InputToken()
 headers <- c(`Authorization` = sprintf('Bearer %s', bearer_token))
 ```
 
-
 `lastseendate`
 
 This function is to deal with correcting last seen date in clan data.
@@ -55,13 +54,12 @@ lastseendate = function(data){
 }
 ```
 
-
 `clan`
 
-This function enables you to get all clan members' basic performance info by simply input the clan tag. The default clan is the one that I am in. Be careful that don't forget the single quotes. Correct input format: `'#8YVVGR2Y'`
+This function enables you to get clan members' basic performance info by simply input the clan tag, clan member's role(leader, elder, member) and clan member's arena level(high, medium, low). The default augument will return all roles and all arena levels. The default clan is the one that I am in. Be careful that don't forget the single quotes when you input the clan tag. Correct format: `'#8YVVGR2Y'`
 
 ```{r}
-clan = function(clantag = '#8YVVGR2Y'){
+clan = function(clantag = '#8YVVGR2Y', role = 'all', arena.level = 'all'){
 
 url = paste0("https://api.clashroyale.com/v1/clans/",'%23',substr(clantag, 2, nchar(clantag)))
 
@@ -73,31 +71,77 @@ memberList <- clandata$memberList
 
 memberList$lastSeen <- lastseendate(memberList)
 
-return(memberList)
+if (role == 'all'){
+  if (arena.level == 'all'){
+    output <- memberList
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'leader'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'elder'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('elder'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'member'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('member'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id < 54000012) 
+  }
 }
-
+  
+return(output)
+}
 
 ```
 
 `player`
 
-This function enables you to get information of a specific player based on player tag.
+This function enables you to get information or the upcoming chests of a player based on player tag.
 
 ```{r}
-player = function(playertag = '#8208VRQL'){
+player = function(playertag = '#8208VRQL', infotype = 'personal'){
 
-url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(player, 2, nchar(player)))
+if (infotype == 'personal'){
+    url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(playertag, 2, nchar(playertag)))
 
-rawplayerdata <- httr::GET(url = "https://api.clashroyale.com/v1/players/%238208VRQL", httr::add_headers(.headers = headers))
-
-rawplayerdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
-
-playerdata <- jsonlite::fromJSON(rawToChar(rawplayerdata$content))
-
-PlayerInfo <- playerdata[1:19]
-
-PlayerInfo <- do.call(rbind, PlayerInfo)
-#memberList$lastSeen <- lastseendate(memberList)
-
-#return(memberList)
+    rawplayerdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+    
+    playerdata <- jsonlite::fromJSON(rawToChar(rawplayerdata$content))
+    
+    return(as_tibble(playerdata[1:19]))
+    } else if (infotype == 'chests'){
+            url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(playertag, 2, nchar(playertag)),"/upcomingchests")
+            
+            rawplayerchestsdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+            
+            playerchestsdata <- jsonlite::fromJSON(rawToChar(rawplayerchestsdata$content))  
+            return(as_tibble(playerchestsdata[1]))
+    }
 }
+```
+
+## Data Exploration
