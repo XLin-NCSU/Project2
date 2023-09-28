@@ -25,7 +25,7 @@ The packages that I used in this project:
 ```{r load packages, message=FALSE, warning=FALSE, include=FALSE}
 library(jsonlite)
 library(tidyverse)
-library(plotly)
+library(httr)
 ```
 
 ## API Interaction Functions
@@ -35,6 +35,7 @@ library(plotly)
 This function is to deal with correcting last seen date in clan data.
 
 ```{r}
+# subtract the date info(YYYYMMDD format) and convert it to date type.
 lastseendate = function(data){
   lastSeen <- substr(data$lastSeen, 1, 8)
   lastSeen <- as.Date(data$lastSeen, "%Y%m%d")
@@ -47,21 +48,20 @@ This function enables you to get clan members' basic performance info by simply 
 
 ```{r}
 clan = function(clantag, token, role = 'all', arena.level = 'all'){
-
+# modify the url by replacing "#" symbol to "%23"
 url = paste0("https://api.clashroyale.com/v1/clans/",'%23',substr(clantag, 2, nchar(clantag)))
-
+# store the full token 
 headers <- c(`Authorization` = sprintf('Bearer %s', token))
-
-# rawclandata <- httr::GET(url = "https://api.clashroyale.com/v1/clans/%238YVVGR2Y", httr::add_headers(.headers = headers))
-
+# get data
 rawclandata <- httr::GET(url = url, httr::add_headers(.headers = headers))
-
+# parse data
 clandata <- jsonlite::fromJSON(rawToChar(rawclandata$content))
-
+# extract the info we want
 memberList <- clandata$memberList
-
+# correct date variable
 memberList$lastSeen <- lastseendate(memberList)
 
+# argument filter
 if (role == 'all'){
   if (arena.level == 'all'){
     output <- memberList
@@ -203,10 +203,6 @@ ggplot(myclan, aes(x = role, y = donations)) +
 -   Online frequency over roles
 
 ```{r}
-myclan %>% group_by(role) %>% summarize(mean = mean(days), sd = sd(days), min = min(days), Q1 = quantile(days, 0.25), median = median(days), Q3 = quantile(days, 0.75), max = max(days))
-```
-
-```{r}
 myclan <- myclan %>% mutate(days = Sys.Date()-lastSeen)
 
 ggplot(myclan, aes(x = role, y = days)) +
@@ -227,7 +223,9 @@ ggplot(myclan, aes(x = expLevel, y = trophies)) +
   annotate("text", x=30, y=7000, label = paste("Correlation:", round(cor(myclan$expLevel, myclan$trophies), 2)))
 ```
 
-From the plot we can see that there is positive linear relationship between trophies and exp level. "leader" group has the highest exp level and trophies on average following by elder and member. We can use contour plot to show the distribution as well:
+From the plot we can see that there is positive linear relationship between trophies and exp level. "leader" group has the highest exp level and trophies on average following by elder and member. 
+
+We can use the heat map to show the overall picture. purple color means smaller number and aqua color means higher number.
 
 ```{r}
 
@@ -327,7 +325,7 @@ clanmates <- clanmates %>% mutate(win_rate = wins/(wins+losses))
 
 ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
   geom_point(aes(color = role)) +
-  labs(title = 'best_trophies over win_rate by role') + 
+  labs(title = 'best_trophies over win_rate') + 
   geom_text(label = name, check_overlap=T)
 
 ```

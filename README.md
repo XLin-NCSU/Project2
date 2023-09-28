@@ -1,1 +1,437 @@
-# Project2
+Project 2
+================
+Xi Lin
+2023-09-26
+
+The aim of this project is to show how to retrieve data from an API and
+analyze the data. Since I am playing Clash Royale(a popular PVP mobile
+game), I would use the API provided by its developer, Supercell company,
+to demonstrate the work. The website of the API is
+[here](https://developer.clashroyale.com/).
+
+![](clash-royale.jpg)
+
+In this project, you could get the clan’s data and player’s data. Since
+Supercell limits the access of API by IP address, please provide me your
+IP address and I will email your token to you.
+
+## Requirements
+
+The packages that I used in this project:
+
+- `httr`: API interaction
+- `jsonlite`: parse the data
+- `tidyverse`: data manipulation and visualization
+
+## API Interaction Functions
+
+`lastseendate`
+
+This function is to deal with correcting last seen date in clan data.
+
+``` r
+lastseendate = function(data){
+  lastSeen <- substr(data$lastSeen, 1, 8)
+  lastSeen <- as.Date(data$lastSeen, "%Y%m%d")
+}
+```
+
+`clan`
+
+This function enables you to get clan members’ basic performance info by
+simply input the clan tag, clan member’s role(leader, elder, member) and
+clan member’s arena level(high, medium, low). The default augument will
+return all roles and all arena levels. The default clan is the one that
+I am in. Be careful that don’t forget the single quotes when you input
+the clan tag. Correct format: `'#8YVVGR2Y'`
+
+``` r
+clan = function(clantag, token, role = 'all', arena.level = 'all'){
+
+url = paste0("https://api.clashroyale.com/v1/clans/",'%23',substr(clantag, 2, nchar(clantag)))
+
+headers <- c(`Authorization` = sprintf('Bearer %s', token))
+
+# rawclandata <- httr::GET(url = "https://api.clashroyale.com/v1/clans/%238YVVGR2Y", httr::add_headers(.headers = headers))
+
+rawclandata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+
+clandata <- jsonlite::fromJSON(rawToChar(rawclandata$content))
+
+memberList <- clandata$memberList
+
+memberList$lastSeen <- lastseendate(memberList)
+
+if (role == 'all'){
+  if (arena.level == 'all'){
+    output <- memberList
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'leader'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('leader','coLeader')) %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'elder'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('elder'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('elder')) %>% filter(arena$id < 54000012) 
+  }
+} else if (role == 'member'){
+    if (arena.level == 'all'){
+    output <- memberList %>% filter(role %in% c('member'))
+  } else if (arena.level == 'high'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id >= 54000017)
+  } else if (arena.level == 'medium'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id < 54000017 & arena$id >= 54000012)
+  } else if (arena.level == 'low'){
+    output <- memberList %>% filter(role %in% c('member')) %>% filter(arena$id < 54000012) 
+  }
+}
+  
+return(output)
+}
+```
+
+`player`
+
+This function enables you to get information or the upcoming chests of a
+player based on player tag.
+
+``` r
+player = function(playertag, token, infotype = 'personal'){
+
+if (infotype == 'personal'){
+    url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(playertag, 2, nchar(playertag)))
+    
+    headers <- c(`Authorization` = sprintf('Bearer %s', token))
+    
+    rawplayerdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+    
+    playerdata <- jsonlite::fromJSON(rawToChar(rawplayerdata$content))
+    
+    return(playerdata[1:19])
+    } else if (infotype == 'chests'){
+            url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(playertag, 2, nchar(playertag)),"/upcomingchests")
+            
+            headers <- c(`Authorization` = sprintf('Bearer %s', token))
+            
+            rawplayerchestsdata <- httr::GET(url = url, httr::add_headers(.headers = headers))
+            
+            playerchestsdata <- jsonlite::fromJSON(rawToChar(rawplayerchestsdata$content))  
+            return(playerchestsdata[1])
+    }
+}
+```
+
+## Data Exploration
+
+Now we can get and analyse the data from the API.
+
+### Clan data
+
+First, let’s try to pull the clan data. Here I will use my clan’s tag.
+
+``` r
+myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+```
+
+There are four roles in the clan: leader, co-leader, elder and member.
+Since every clan has only one leader, I would merge the leader and
+co-leader together as role of leader.
+
+``` r
+myclan <- myclan %>% 
+  mutate(role = if_else(role == 'coLeader','leader',role))
+
+myclan$role <- factor(myclan$role, levels = c('leader','elder','member'))
+```
+
+I would like to see the difference between these roles through multiple
+dimensions: the trophies, donations, and online frequency.
+
+Trophies reflect the cards’ level and the skills of a player. More
+trophies, better the player is.
+
+Clash Royale also allows players to donate cards to clanmates in the
+clan. Players can request every 7 hours for cards of their choosing.
+They are allowed to request for any
+<span style="color: gray">**Common**</span> or
+<span style="color: red">**Rare**</span> card they have unlocked. On
+Epic Sundays, players are allowed to request
+<span style="color: blueviolet">**Epic**</span> cards once.
+
+To measure the online frequency, I would create a new variable to
+measure how many days the player were not seen online.
+
+- Trophies over roles
+
+Let’s make some statistics summary and plot the box plot.
+
+``` r
+myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies), min = min(trophies), Q1 = quantile(trophies, 0.25), median = median(trophies), Q3 = quantile(trophies, 0.75), max = max(trophies))
+```
+
+    ## # A tibble: 3 × 8
+    ##   role    mean    sd   min    Q1 median    Q3   max
+    ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
+    ## 1 leader 6423. 1204.  4236 5543   6359   7500  8207
+    ## 2 elder  5736. 1475.  3359 5090.  6168.  6780  7667
+    ## 3 member 5015. 1632.  2420 3518.  5198   6247  7202
+
+``` r
+ggplot(myclan, aes(x = role, y = trophies)) +
+  geom_boxplot(aes(color=role)) +
+  scale_x_discrete("Role") +
+  scale_y_continuous("Trophies") +
+  labs(title = "Trophies over roles")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+- Donations over roles
+
+``` r
+myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donations), min = min(donations), Q1 = quantile(donations, 0.25), median = median(donations), Q3 = quantile(donations, 0.75), max = max(donations))
+```
+
+    ## # A tibble: 3 × 8
+    ##   role    mean    sd   min    Q1 median    Q3   max
+    ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
+    ## 1 leader  95.9 134.      0   0       64 124     456
+    ## 2 elder   79.4  92.0     0  13.5     52  86     282
+    ## 3 member  40.4  59.0     0   2       19  39.5   211
+
+``` r
+ggplot(myclan, aes(x = role, y = donations)) +
+  geom_jitter(aes(color=role)) +
+  scale_x_discrete("Role") +
+  scale_y_continuous("Donations") +
+  labs(title = "Donations over roles")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+- Online frequency over roles
+
+``` r
+myclan <- myclan %>% mutate(days = Sys.Date()-lastSeen)
+
+ggplot(myclan, aes(x = role, y = days)) +
+  geom_jitter(aes(color=role)) +
+  scale_x_discrete("Role") +
+  scale_y_continuous("Days not seen") +
+  labs(title = "Online frequency over roles")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+From these plots, we can see that “leader” group has higher trophies
+indicating that these players have player for a long time and have
+better techniques. The “leader” group has a little bit more donations on
+average than “elder” group and “member” group, indicating that this
+group made more contributions to the clanmates. However, there are three
+“leaders” not shown more than 10 days, one of them even over 60 days.
+It’s time to warn or demote them! Overall, the players in this clan are
+very active.
+
+Next, let’s look at the relationship between players’ exp and trophies.
+Each time the player makes donation or upgrades the card, he/she will
+gain some exp.
+
+``` r
+ggplot(myclan, aes(x = expLevel, y = trophies)) +
+  geom_point(aes(color = role)) +
+  labs(title = 'Exp over Trophies by role') +
+  annotate("text", x=30, y=7000, label = paste("Correlation:", round(cor(myclan$expLevel, myclan$trophies), 2)))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+From the plot we can see that there is positive linear relationship
+between trophies and exp level. “leader” group has the highest exp level
+and trophies on average following by elder and member. We can use
+contour plot to show the distribution as well:
+
+``` r
+rownames(myclan) <- myclan$name
+heat <- myclan %>% select(expLevel, trophies, donations, donationsReceived) %>% as.matrix()
+
+heatmap(heat, 
+        scale="column", 
+        col = cm.colors(256),
+        xlab="variable", 
+        ylab="player", 
+        main="heatmap of plays' performance",
+        cexRow = 0.4,
+        cexCol = 0.6,
+        Rowv = NA, 
+        Colv = NA
+        )
+```
+
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+When we consider the arena level and the roles, we can make a
+contingency table.
+
+``` r
+myclan <- myclan %>% mutate(arena_level = case_when(arena$id >= 54000017 ~ 'High',
+                                          arena$id < 54000017 & arena$id >= 54000012 ~ 'Medium',
+                                          arena$id < 54000012 ~ 'Low'))
+
+myclan$arena_level <- factor(myclan$arena_level, c('High','Medium','Low'))
+
+table(myclan$role, myclan$arena_level)
+```
+
+    ##         
+    ##          High Medium Low
+    ##   leader    7     10   0
+    ##   elder     3      8   1
+    ##   member    3     11   4
+
+From the table we see that the “leader” group has none player in Low
+arenas and has the most players in High arenas.
+
+### Player data
+
+Then, we can examine a specific player’s information and check the
+upcoming chest that the player will get. From this endpoint, we are able
+to collect lots of player’s data that are now shown in clan’s data such
+as historical wins, losses, best trophies, challenges and total
+donations, etc. I will use my player tag as an example.
+
+First, we read in the data:
+
+``` r
+playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+```
+
+To make the result more readable, we can transpose the data frame:
+
+``` r
+t(as.tibble(playerinfo))
+```
+
+    ##                       [,1]        
+    ## tag                   "#8208VRQL" 
+    ## name                  "Grumpy Lin"
+    ## expLevel              "57"        
+    ## trophies              "8089"      
+    ## bestTrophies          "8124"      
+    ## wins                  "9068"      
+    ## losses                "4869"      
+    ## battleCount           "29462"     
+    ## threeCrownWins        "6279"      
+    ## challengeCardsWon     "2977"      
+    ## challengeMaxWins      "12"        
+    ## tournamentCardsWon    "157"       
+    ## tournamentBattleCount "455"       
+    ## role                  "coLeader"  
+    ## donations             "382"       
+    ## donationsReceived     "0"         
+    ## totalDonations        "246676"    
+    ## warDayWins            "174"       
+    ## clanCardsCollected    "452291"
+
+similarly, we can pull the upcoming chest info by adding the argument:
+
+``` r
+chest <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA', infotype = 'chests')
+
+chest
+```
+
+    ## $items
+    ##    index                   name
+    ## 1      0           Golden Chest
+    ## 2      1           Golden Chest
+    ## 3      2             Gold Crate
+    ## 4      3             Gold Crate
+    ## 5      4           Golden Chest
+    ## 6      5   Plentiful Gold Crate
+    ## 7      6           Golden Chest
+    ## 8      7           Golden Chest
+    ## 9      8           Golden Chest
+    ## 10     9          Magical Chest
+    ## 11    15            Giant Chest
+    ## 12    36 Overflowing Gold Crate
+    ## 13    62       Royal Wild Chest
+    ## 14   140             Epic Chest
+    ## 15   386        Legendary Chest
+    ## 16   474   Mega Lightning Chest
+
+### Clan data + Player data: Who is the best in clan?
+
+If you win more and lose less, obviously you would get a higher win
+rate. But, if you are at the lower arena with lower trophies, most
+likely you will meet rookie opponents, which makes you much more easily
+to win; meanwhile if you are at the higher arena with higher trophies,
+you will often meet experienced veteran opponents, even professional
+players – and eat a Loss.
+
+We want to put the win rate and trophies together to see who is the best
+player in a clan: more trophies with higher win rate.
+
+``` r
+clanplayers <- unlist(myclan$tag)
+
+playerlist <- NULL
+
+for (i in 1:length(clanplayers)){
+
+  playerlist[[i]] <- player(playertag = clanplayers[i], token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+
+}
+
+name <- unlist(sapply(playerlist, FUN = `[`, "name"))
+wins <- unlist(sapply(playerlist, FUN = `[`, "wins"))
+losses <- unlist(sapply(playerlist, FUN = `[`, "losses"))
+best_trophies <- unlist(sapply(playerlist, FUN = `[`, "bestTrophies"))
+total_donation <- unlist(sapply(playerlist, FUN = `[`, "totalDonations"))
+role <- unlist(sapply(playerlist, FUN = `[`, "role"))
+
+clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies,total_donation))
+
+rownames(clanmates) <- clanmates$name
+
+clanmates$wins <- as.numeric(clanmates$wins)
+clanmates$losses <- as.numeric(clanmates$losses)
+clanmates$best_trophies <- as.numeric(clanmates$best_trophies)
+clanmates$total_donation <- as.numeric(clanmates$total_donation)
+
+clanmates <- clanmates %>% mutate(win_rate = wins/(wins+losses))
+
+
+ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
+  geom_point(aes(color = role)) +
+  labs(title = 'best_trophies over win_rate') + 
+  geom_text(label = name, check_overlap=T)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+From this plot, we can see that some “member” players have win rate
+higher than 0.6 but all below 6000 trophies. Two players have win rate
+above 0.6 and above 7000 trophies.
+
+Only one player has win rate over 0.65 and above 8000 trophies: Yes,
+that’s me. :)
+
+Hope you enjoy my project.
