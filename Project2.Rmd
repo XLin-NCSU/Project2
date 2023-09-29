@@ -1,12 +1,8 @@
 ---
-title: "Project 2: Clash Royale"
+title: "Project 2: Clash Royale data analysis"
 author: "Xi Lin"
 date: "2023-09-26"
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ## Introduction
 
@@ -40,7 +36,7 @@ library(httr)
 
 This function is to correcting last seen date in clan data.
 
-```{r}
+```{r lastseen}
 # subtract the date info(YYYYMMDD format) and convert it to date type.
 lastseendate = function(data){
   lastSeen <- substr(data$lastSeen, 1, 8)
@@ -52,7 +48,7 @@ lastseendate = function(data){
 
 This function enables you to get clan members' basic performance info by simply input the clan tag, the API token, the clan member's role(leader, elder, member) and the clan member's arena level(high, medium, low). The default argument will return all roles and all arena levels. Be careful that don't forget the single quotes when you input the clan tag. Correct format: `'#8YVVGR2Y'`
 
-```{r}
+```{r clan function}
 clan = function(clantag, token, role = 'all', arena.level = 'all'){
 # modify the url by replacing "#" symbol to "%23"
 url = paste0("https://api.clashroyale.com/v1/clans/",'%23',substr(clantag, 2, nchar(clantag)))
@@ -119,7 +115,7 @@ return(output)
 
 This function enables you to get information in detail or the upcoming chests of a player based on player tag.
 
-```{r}
+```{r player function}
 player = function(playertag, token, infotype = 'personal'){ 
   if (infotype == 'personal'){ # player info
     url = paste0("https://api.clashroyale.com/v1/players/",'%23',substr(playertag, 2, nchar(playertag)))
@@ -147,14 +143,14 @@ Now we can pull the data from the API and analyse it.
 
 First, let's try to pull the clan data. Here I will use my clan's tag and my API token as an example.
 
-```{r}
+```{r get myclan}
 myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
 
 ```
 
 There are four roles in the clan: leader, co-leader, elder and member. Since every clan has only one leader, leader and co-leader are merged together as role of leader.
 
-```{r}
+```{r modify role}
 # only change 'coLeader' to 'leader', keep others the same.
 myclan <- myclan %>% 
   mutate(role = if_else(role == 'coLeader', 'leader', role))
@@ -175,12 +171,12 @@ To measure the online frequency, I would create a new variable to measure how ma
 
 Let's make some statistics summary and plot the box plot.
 
-```{r}
+```{r trophies stats}
 # summarize the basic stats info grouping by role
 myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies), min = min(trophies), Q1 = quantile(trophies, 0.25), median = median(trophies), Q3 = quantile(trophies, 0.75), max = max(trophies))
 ```
 
-```{r}
+```{r trophies plot}
 # make box plot
 ggplot(myclan, aes(x = role, y = trophies)) +
   geom_boxplot(aes(color=role)) +
@@ -191,12 +187,12 @@ ggplot(myclan, aes(x = role, y = trophies)) +
 
 -   Donations over roles
 
-```{r}
+```{r donation stat}
 # summarize the basic stats info grouping by role
 myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donations), min = min(donations), Q1 = quantile(donations, 0.25), median = median(donations), Q3 = quantile(donations, 0.75), max = max(donations))
 ```
 
-```{r}
+```{r donation plot}
 # make a jitter plot
 ggplot(myclan, aes(x = role, y = donations)) +
   geom_jitter(aes(color=role)) +
@@ -207,7 +203,7 @@ ggplot(myclan, aes(x = role, y = donations)) +
 
 -   Online frequency over roles
 
-```{r}
+```{r days plot}
 # calculate the days between current date and last seen date.
 myclan <- myclan %>% mutate(days = Sys.Date()-lastSeen)
 
@@ -223,7 +219,7 @@ From these three plots, we can see that "leader" group has higher trophies indic
 
 Next, let's look at the relationship between players' exp and trophies. Each time the player makes donation or upgrades the card, he/she will gain some exp.
 
-```{r}
+```{r exp over trophies}
 # make point plot
 ggplot(myclan, aes(x = expLevel, y = trophies)) +
   geom_point(aes(color = role)) +
@@ -235,7 +231,7 @@ From the plot we can see that there is positive linear relationship between trop
 
 We can use the heat map to show the overall picture. purple color means smaller number and aqua color means higher number.
 
-```{r}
+```{r heat map}
 # rename the rows
 rownames(myclan) <- myclan$name
 # select variables and convert the data frame to matrix
@@ -257,7 +253,7 @@ heatmap(heat,
 
 When we consider the arena level and the roles, we can make a contingency table.
 
-```{r}
+```{r two way table}
 # create arena level variable
 myclan <- myclan %>% mutate(arena_level = case_when(arena$id >= 54000017 ~ 'High',
                                           arena$id < 54000017 & arena$id >= 54000012 ~ 'Medium',
@@ -277,21 +273,21 @@ Then, we can examine a specific player's information and check the upcoming ches
 
 First, we read in the data:
 
-```{r}
+```{r player data}
 # pull player data
 playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
 ```
 
 To make the result more readable, we can transpose the data frame:
 
-```{r}
+```{r player tibble}
 # transpose the tibble
 t(as.tibble(playerinfo))
 ```
 
 similarly, we can pull the upcoming chest info by adding the argument:
 
-```{r}
+```{r chest data}
 # pull chests data
 chests <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA', infotype = 'chests')
 
@@ -304,7 +300,7 @@ If you win more and lose less, obviously you would get a higher win rate. But, i
 
 We want to put the win rate and trophies together to see who is the best player in a clan: more trophies with higher win rate.
 
-```{r}
+```{r win rate}
 # get all tags
 clanplayers <- unlist(myclan$tag)
 # setup list
