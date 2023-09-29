@@ -19,7 +19,7 @@ by IP address, please provide me your IP address and I will email your
 token to you.
 
 You can find your IP address from
-[google](https://www.google.com/search?q=what%27s+my+ip+address).
+[Google](https://www.google.com/search?q=what%27s+my+ip+address).
 
 ## Requirements
 
@@ -149,7 +149,7 @@ First, let’s try to pull the clan data. Here I will use my clan’s tag
 and my API token as an example.
 
 ``` r
-myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 ```
 
 There are four roles in the clan: leader, co-leader, elder and member.
@@ -194,9 +194,9 @@ myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies)
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 6423. 1204.  4237 5543   6359  7500   8207
-    ## 2 elder  5741. 1479.  3359 5090.  6168. 6795.  7667
-    ## 3 member 5014. 1631.  2420 3518.  5156. 6246.  7202
+    ## 1 leader 6424. 1204.  4230 5543   6359  7500   8207
+    ## 2 elder  5741. 1480.  3359 5090.  6154  6795.  7667
+    ## 3 member 5026. 1624.  2511 3518.  5200. 6263.  7202
 
 ``` r
 # make box plot
@@ -219,9 +219,9 @@ myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donation
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 102.  137.      0   0       64 131     456
-    ## 2 elder   83.2  99.0     0  13.5     52  88     300
-    ## 3 member  41.6  60.6     0   2       19  39.5   211
+    ## 1 leader 112.  147.      0     0     82 144     484
+    ## 2 elder   87.1 101.      0    16     62  88     316
+    ## 3 member  42.6  62.3     0     2     19  44.5   221
 
 ``` r
 # make a jitter plot
@@ -337,7 +337,7 @@ First, we read in the data:
 
 ``` r
 # pull player data
-playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 ```
 
 To make the result more readable, we can transpose the data frame:
@@ -353,18 +353,18 @@ t(as.tibble(playerinfo))
     ## expLevel              "57"        
     ## trophies              "8089"      
     ## bestTrophies          "8124"      
-    ## wins                  "9073"      
+    ## wins                  "9075"      
     ## losses                "4870"      
-    ## battleCount           "29468"     
+    ## battleCount           "29470"     
     ## threeCrownWins        "6280"      
     ## challengeCardsWon     "2977"      
     ## challengeMaxWins      "12"        
     ## tournamentCardsWon    "157"       
     ## tournamentBattleCount "455"       
     ## role                  "coLeader"  
-    ## donations             "402"       
+    ## donations             "440"       
     ## donationsReceived     "0"         
-    ## totalDonations        "246696"    
+    ## totalDonations        "246734"    
     ## warDayWins            "174"       
     ## clanCardsCollected    "452291"
 
@@ -372,28 +372,28 @@ similarly, we can pull the upcoming chest info by adding the argument:
 
 ``` r
 # pull chests data
-chests <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA', infotype = 'chests')
+chests <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA', infotype = 'chests')
 
 chests
 ```
 
     ## $items
     ##    index                   name
-    ## 1      0             Gold Crate
-    ## 2      1             Gold Crate
+    ## 1      0           Golden Chest
+    ## 2      1   Plentiful Gold Crate
     ## 3      2           Golden Chest
-    ## 4      3   Plentiful Gold Crate
+    ## 4      3           Golden Chest
     ## 5      4           Golden Chest
-    ## 6      5           Golden Chest
+    ## 6      5          Magical Chest
     ## 7      6           Golden Chest
-    ## 8      7          Magical Chest
+    ## 8      7           Golden Chest
     ## 9      8           Golden Chest
-    ## 10    13            Giant Chest
-    ## 11    34 Overflowing Gold Crate
-    ## 12    60       Royal Wild Chest
-    ## 13   138             Epic Chest
-    ## 14   384        Legendary Chest
-    ## 15   472   Mega Lightning Chest
+    ## 10    11            Giant Chest
+    ## 11    32 Overflowing Gold Crate
+    ## 12    58       Royal Wild Chest
+    ## 13   136             Epic Chest
+    ## 14   382        Legendary Chest
+    ## 15   470   Mega Lightning Chest
 
 ### Clan data + Player data: Who is the best in clan?
 
@@ -415,7 +415,7 @@ playerlist <- NULL
 
 for (i in 1:length(clanplayers)){
 # store all players' info into list
-  playerlist[[i]] <- player(playertag = clanplayers[i], token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+  playerlist[[i]] <- player(playertag = clanplayers[i], token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 
 }
 # extract columns that we need
@@ -425,7 +425,7 @@ losses <- unlist(sapply(playerlist, FUN = `[`, "losses"))
 best_trophies <- unlist(sapply(playerlist, FUN = `[`, "bestTrophies"))
 role <- unlist(sapply(playerlist, FUN = `[`, "role"))
 # combine together as a data frame
-clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies,total_donation))
+clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies))
 # rename rows
 rownames(clanmates) <- clanmates$name
 # change data type to numeric
@@ -447,8 +447,8 @@ ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
 From this plot, we can see that some “member” players have winning rate
 higher than 0.65 but all below 6000 trophies.
 
-Only one player has win rate over 0.65 and above 8000 trophies: Yes,
-that’s me. :)
+Only one player has win rate over 0.65 and above 8000 trophies: Grumpy
+Lin. Yes, that’s me. :)
 
 We can count the number of players based on winning rate and best
 trophies.
@@ -473,14 +473,16 @@ table(clanmates$Winning_rate_group, clanmates$best_trophies_group)
     ##                  
     ##                   high arena level medium arena level low arena level
     ##   excellent skill                1                  2               0
-    ##   good skill                     3                  7               5
-    ##   normal skill                   6                 14               4
+    ##   good skill                     3                  7               6
+    ##   normal skill                   6                 14               3
     ##   bad skill                      0                  2               3
 
 From the two-way table, we can see that at each arena level, the number
 of players decreases when skill level increases. Most of the clanmates
-are in median arena level, indicating that my clan is not one of the top
-ranked clans. We have a long way to go.
+are in medium arena level, which indicates that my clan is not one of
+the top ranked clans.
+
+We have a long way to go.
 
 Hope you enjoy my project.
 

@@ -12,9 +12,10 @@ The aim of this project is to show how to retrieve data from an API and analyze 
 knitr::include_graphics("clash-royale.jpg")
 ```
 
+
 In this project, you could get the clan's data and player's data from the functions that I created. Since Supercell limits the access of API by IP address, please provide me your IP address and I will email your token to you.
 
-You can find your IP address from [google](https://www.google.com/search?q=what%27s+my+ip+address).
+You can find your IP address from [Google](https://www.google.com/search?q=what%27s+my+ip+address).
 
 ## Requirements
 
@@ -144,7 +145,7 @@ Now we can pull the data from the API and analyse it.
 First, let's try to pull the clan data. Here I will use my clan's tag and my API token as an example.
 
 ```{r get myclan}
-myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+myclan <- clan(clantag = '#8YVVGR2Y', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 
 ```
 
@@ -275,7 +276,7 @@ First, we read in the data:
 
 ```{r player data}
 # pull player data
-playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+playerinfo <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 ```
 
 To make the result more readable, we can transpose the data frame:
@@ -289,7 +290,7 @@ similarly, we can pull the upcoming chest info by adding the argument:
 
 ```{r chest data}
 # pull chests data
-chests <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA', infotype = 'chests')
+chests <- player(playertag = '#8208VRQL', token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA', infotype = 'chests')
 
 chests
 ```
@@ -308,7 +309,7 @@ playerlist <- NULL
 
 for (i in 1:length(clanplayers)){
 # store all players' info into list
-  playerlist[[i]] <- player(playertag = clanplayers[i], token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQ5OTM1ZGQwLTdjNzktNDQ0Yy05MGU0LWE1ZTk2YjQyZWNiOSIsImlhdCI6MTY5NTc0ODU1Nywic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3NS4xMTAuNzAuNTYiXSwidHlwZSI6ImNsaWVudCJ9XX0._o3WTwKGwrkiNGuhEiAf963JJv2UueE4jgZ4JEClZqqToJ26ZEbi7vUOH2IFbV6yBt2y3ExUhEDQ5h525RAtKA')
+  playerlist[[i]] <- player(playertag = clanplayers[i], token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjdmZWZiMmU5LTA0M2MtNDVjYi1hZDEyLTMxNWU0MmExYjViNCIsImlhdCI6MTY5NTk5MjQ4OCwic3ViIjoiZGV2ZWxvcGVyLzExNDhlMzZkLTU0YjAtOGZlYy1lMjM1LTY0Mzk3NjFmMzRjMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIxNTAuMjE2LjEzNy4xMTciXSwidHlwZSI6ImNsaWVudCJ9XX0.rY9dcm8jhgMuarLm_673oN0_YCrds6dTOKY6Ei_9BjYslF2c3gDr-d2CEPHthyIEMuv5gwUdJ8ViGJgbB6ARZA')
 
 }
 # extract columns that we need
@@ -318,7 +319,7 @@ losses <- unlist(sapply(playerlist, FUN = `[`, "losses"))
 best_trophies <- unlist(sapply(playerlist, FUN = `[`, "bestTrophies"))
 role <- unlist(sapply(playerlist, FUN = `[`, "role"))
 # combine together as a data frame
-clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies,total_donation))
+clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies))
 # rename rows
 rownames(clanmates) <- clanmates$name
 # change data type to numeric
@@ -338,7 +339,7 @@ ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
 
 From this plot, we can see that some "member" players have winning rate higher than 0.65 but all below 6000 trophies.
 
-Only one player has win rate over 0.65 and above 8000 trophies: Yes, that's me. :)
+Only one player has win rate over 0.65 and above 8000 trophies: Grumpy Lin. Yes, that's me. :)
 
 We can count the number of players based on winning rate and best trophies.
 
@@ -359,7 +360,9 @@ clanmates$best_trophies_group <- factor(clanmates$best_trophies_group, levels = 
 table(clanmates$Winning_rate_group, clanmates$best_trophies_group)
 ```
 
-From the two-way table, we can see that at each arena level, the number of players decreases when skill level increases. Most of the clanmates are in median arena level, indicating that my clan is not one of the top ranked clans. We have a long way to go.
+From the two-way table, we can see that at each arena level, the number of players decreases when skill level increases. Most of the clanmates are in medium arena level, which indicates that my clan is not one of the top ranked clans. 
+
+We have a long way to go.
 
 Hope you enjoy my project.
 
