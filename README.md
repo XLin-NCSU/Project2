@@ -3,18 +3,23 @@ Project 2: Clash Royale
 Xi Lin
 2023-09-26
 
+## Introduction
+
 The aim of this project is to show how to retrieve data from an API and
 analyze the data. Since I am playing Clash Royale(a popular PVP mobile
 game), I would use the API provided by its developer, Supercell company,
 to demonstrate the work. The website of the API is
 [here](https://developer.clashroyale.com/).
 
-![](clash-royale.jpg)
+<img src="clash-royale.jpg" width="300px" style="display: block; margin: auto;" />
 
 In this project, you could get the clan’s data and player’s data from
 the functions that I created. Since Supercell limits the access of API
 by IP address, please provide me your IP address and I will email your
 token to you.
+
+You can find your IP address from
+[google](https://www.google.com/search?q=what%27s+my+ip+address).
 
 ## Requirements
 
@@ -26,9 +31,9 @@ The packages that I used in this project:
 
 ## API Interaction Functions
 
-`lastseendate`
+- `lastseendate`
 
-This function is to deal with correcting last seen date in clan data.
+This function is to correcting last seen date in clan data.
 
 ``` r
 # subtract the date info(YYYYMMDD format) and convert it to date type.
@@ -38,13 +43,14 @@ lastseendate = function(data){
 }
 ```
 
-`clan`
+- `clan`
 
 This function enables you to get clan members’ basic performance info by
-simply input the clan tag, clan member’s role(leader, elder, member) and
-clan member’s arena level(high, medium, low). The default argument will
-return all roles and all arena levels. Be careful that don’t forget the
-single quotes when you input the clan tag. Correct format: `'#8YVVGR2Y'`
+simply input the clan tag, the API token, the clan member’s role(leader,
+elder, member) and the clan member’s arena level(high, medium, low). The
+default argument will return all roles and all arena levels. Be careful
+that don’t forget the single quotes when you input the clan tag. Correct
+format: `'#8YVVGR2Y'`
 
 ``` r
 clan = function(clantag, token, role = 'all', arena.level = 'all'){
@@ -108,7 +114,7 @@ return(output)
 }
 ```
 
-`player`
+- `player`
 
 This function enables you to get information in detail or the upcoming
 chests of a player based on player tag.
@@ -135,7 +141,7 @@ player = function(playertag, token, infotype = 'personal'){
 
 ## Data Exploration
 
-Now we can pull the data and analyse it from the API.
+Now we can pull the data from the API and analyse it.
 
 ### Clan data
 
@@ -188,9 +194,9 @@ myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies)
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 6423. 1204.  4236 5543   6359   7500  8207
-    ## 2 elder  5736. 1475.  3359 5090.  6168.  6780  7667
-    ## 3 member 5015. 1632.  2420 3518.  5198   6247  7202
+    ## 1 leader 6423. 1204.  4237 5543   6359  7500   8207
+    ## 2 elder  5736. 1475.  3359 5090.  6168. 6780   7667
+    ## 3 member 5012. 1632.  2420 3518.  5170. 6246.  7202
 
 ``` r
 # make box plot
@@ -201,7 +207,7 @@ ggplot(myclan, aes(x = role, y = trophies)) +
   labs(title = "Trophies over roles") # lables
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 - Donations over roles
 
@@ -213,9 +219,9 @@ myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donation
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader  96.4 134.      0   0       64 124     456
-    ## 2 elder   80.9  95.7     0  13.5     52  86     300
-    ## 3 member  40.4  59.0     0   2       19  39.5   211
+    ## 1 leader  99.9 137.      0   0       64 124     456
+    ## 2 elder   82.6  98.9     0  13.5     52  86     300
+    ## 3 member  41.6  60.6     0   2       19  39.5   211
 
 ``` r
 # make a jitter plot
@@ -226,7 +232,7 @@ ggplot(myclan, aes(x = role, y = donations)) +
   labs(title = "Donations over roles") # lables
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 - Online frequency over roles
 
@@ -242,7 +248,7 @@ ggplot(myclan, aes(x = role, y = days)) +
   labs(title = "Online frequency over roles")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 From these three plots, we can see that “leader” group has higher
 trophies indicating that these players have player for a long time and
@@ -265,7 +271,7 @@ ggplot(myclan, aes(x = expLevel, y = trophies)) +
   annotate("text", x=30, y=7000, label = paste("Correlation:", round(cor(myclan$expLevel, myclan$trophies), 2))) # add a correlation value
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 From the plot we can see that there is positive linear relationship
 between trophies and exp level. “leader” group has the highest exp level
@@ -293,7 +299,7 @@ heatmap(heat,
         )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 When we consider the arena level and the roles, we can make a
 contingency table.
@@ -347,18 +353,18 @@ t(as.tibble(playerinfo))
     ## expLevel              "57"        
     ## trophies              "8089"      
     ## bestTrophies          "8124"      
-    ## wins                  "9068"      
-    ## losses                "4869"      
-    ## battleCount           "29462"     
-    ## threeCrownWins        "6279"      
+    ## wins                  "9073"      
+    ## losses                "4870"      
+    ## battleCount           "29468"     
+    ## threeCrownWins        "6280"      
     ## challengeCardsWon     "2977"      
     ## challengeMaxWins      "12"        
     ## tournamentCardsWon    "157"       
     ## tournamentBattleCount "455"       
     ## role                  "coLeader"  
-    ## donations             "382"       
+    ## donations             "402"       
     ## donationsReceived     "0"         
-    ## totalDonations        "246676"    
+    ## totalDonations        "246696"    
     ## warDayWins            "174"       
     ## clanCardsCollected    "452291"
 
@@ -373,22 +379,21 @@ chests
 
     ## $items
     ##    index                   name
-    ## 1      0           Golden Chest
-    ## 2      1           Golden Chest
-    ## 3      2             Gold Crate
-    ## 4      3             Gold Crate
+    ## 1      0             Gold Crate
+    ## 2      1             Gold Crate
+    ## 3      2           Golden Chest
+    ## 4      3   Plentiful Gold Crate
     ## 5      4           Golden Chest
-    ## 6      5   Plentiful Gold Crate
+    ## 6      5           Golden Chest
     ## 7      6           Golden Chest
-    ## 8      7           Golden Chest
+    ## 8      7          Magical Chest
     ## 9      8           Golden Chest
-    ## 10     9          Magical Chest
-    ## 11    15            Giant Chest
-    ## 12    36 Overflowing Gold Crate
-    ## 13    62       Royal Wild Chest
-    ## 14   140             Epic Chest
-    ## 15   386        Legendary Chest
-    ## 16   474   Mega Lightning Chest
+    ## 10    13            Giant Chest
+    ## 11    34 Overflowing Gold Crate
+    ## 12    60       Royal Wild Chest
+    ## 13   138             Epic Chest
+    ## 14   384        Legendary Chest
+    ## 15   472   Mega Lightning Chest
 
 ### Clan data + Player data: Who is the best in clan?
 
@@ -439,7 +444,7 @@ ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
   geom_text(label = name, check_overlap=T) # add text label
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 From this plot, we can see that some “member” players have win rate
 higher than 0.6 but all below 6000 trophies. Two players have win rate
