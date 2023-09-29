@@ -207,7 +207,7 @@ ggplot(myclan, aes(x = role, y = trophies)) +
   labs(title = "Trophies over roles") # lables
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 - Donations over roles
 
@@ -219,7 +219,7 @@ myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donation
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader  99.9 137.      0   0       64 124     456
+    ## 1 leader 101.  137.      0   0       64 124     456
     ## 2 elder   82.6  98.9     0  13.5     52  86     300
     ## 3 member  41.6  60.6     0   2       19  39.5   211
 
@@ -232,7 +232,7 @@ ggplot(myclan, aes(x = role, y = donations)) +
   labs(title = "Donations over roles") # lables
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 - Online frequency over roles
 
@@ -248,7 +248,7 @@ ggplot(myclan, aes(x = role, y = days)) +
   labs(title = "Online frequency over roles")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 From these three plots, we can see that “leader” group has higher
 trophies indicating that these players have player for a long time and
@@ -271,7 +271,7 @@ ggplot(myclan, aes(x = expLevel, y = trophies)) +
   annotate("text", x=30, y=7000, label = paste("Correlation:", round(cor(myclan$expLevel, myclan$trophies), 2))) # add a correlation value
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 From the plot we can see that there is positive linear relationship
 between trophies and exp level. “leader” group has the highest exp level
@@ -299,7 +299,7 @@ heatmap(heat,
         )
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 When we consider the arena level and the roles, we can make a
 contingency table.
@@ -444,7 +444,7 @@ ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
   geom_text(label = name, check_overlap=T) # add text label
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 From this plot, we can see that some “member” players have win rate
 higher than 0.6 but all below 6000 trophies. Two players have win rate

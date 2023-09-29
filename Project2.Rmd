@@ -36,7 +36,7 @@ library(httr)
 
 ## API Interaction Functions
 
-- `lastseendate`
+-   `lastseendate`
 
 This function is to correcting last seen date in clan data.
 
@@ -48,7 +48,7 @@ lastseendate = function(data){
 }
 ```
 
-- `clan`
+-   `clan`
 
 This function enables you to get clan members' basic performance info by simply input the clan tag, the API token, the clan member's role(leader, elder, member) and the clan member's arena level(high, medium, low). The default argument will return all roles and all arena levels. Be careful that don't forget the single quotes when you input the clan tag. Correct format: `'#8YVVGR2Y'`
 
@@ -115,7 +115,7 @@ return(output)
 
 ```
 
-- `player`
+-   `player`
 
 This function enables you to get information in detail or the upcoming chests of a player based on player tag.
 
