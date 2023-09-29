@@ -194,8 +194,8 @@ myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies)
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 6421. 1204.  4237 5543   6359  7500   8207
-    ## 2 elder  5743. 1480.  3359 5090.  6184. 6795.  7667
+    ## 1 leader 6423. 1204.  4237 5543   6359  7500   8207
+    ## 2 elder  5741. 1479.  3359 5090.  6168. 6795.  7667
     ## 3 member 5014. 1631.  2420 3518.  5156. 6246.  7202
 
 ``` r
@@ -219,7 +219,7 @@ myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donation
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 101.  137.      0   0       64 124     456
+    ## 1 leader 102.  137.      0   0       64 131     456
     ## 2 elder   83.2  99.0     0  13.5     52  88     300
     ## 3 member  41.6  60.6     0   2       19  39.5   211
 
@@ -277,8 +277,8 @@ From the plot we can see that there is positive linear relationship
 between trophies and exp level. “leader” group has the highest exp level
 and trophies on average following by elder and member.
 
-We can use the heat map to show the overall picture. purple color means
-smaller number and aqua color means higher number.
+We can use the heat map to show the overall picture. The purple color is
+for larger numbers while the aqua color is for smaller numbers.
 
 ``` r
 # rename the rows
@@ -291,9 +291,9 @@ heatmap(heat,
         col = cm.colors(256), # color
         xlab="variable", 
         ylab="player", 
-        main="heatmap of plays' performance",
-        cexRow = 0.4, # row font size
-        cexCol = 0.6, # column font size
+        main="Heat map of players' performance in the clan",
+        cexRow = 0.6, # row font size
+        cexCol = 1, # column font size
         Rowv = NA, 
         Colv = NA
         )

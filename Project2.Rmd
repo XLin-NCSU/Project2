@@ -229,7 +229,7 @@ ggplot(myclan, aes(x = expLevel, y = trophies)) +
 
 From the plot we can see that there is positive linear relationship between trophies and exp level. "leader" group has the highest exp level and trophies on average following by elder and member.
 
-We can use the heat map to show the overall picture. purple color means smaller number and aqua color means higher number.
+We can use the heat map to show the overall picture. The purple color is for larger numbers while the aqua color is for smaller numbers.
 
 ```{r heat map}
 # rename the rows
@@ -242,9 +242,9 @@ heatmap(heat,
         col = cm.colors(256), # color
         xlab="variable", 
         ylab="player", 
-        main="heatmap of plays' performance",
-        cexRow = 0.4, # row font size
-        cexCol = 0.6, # column font size
+        main="Heat map of players' performance in the clan",
+        cexRow = 0.6, # row font size
+        cexCol = 1, # column font size
         Rowv = NA, 
         Colv = NA
         )
