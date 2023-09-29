@@ -194,9 +194,9 @@ myclan %>% group_by(role) %>% summarize(mean = mean(trophies), sd = sd(trophies)
     ## # A tibble: 3 × 8
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
-    ## 1 leader 6423. 1204.  4237 5543   6359  7500   8207
-    ## 2 elder  5736. 1475.  3359 5090.  6168. 6780   7667
-    ## 3 member 5012. 1632.  2420 3518.  5170. 6246.  7202
+    ## 1 leader 6421. 1204.  4237 5543   6359  7500   8207
+    ## 2 elder  5743. 1480.  3359 5090.  6184. 6795.  7667
+    ## 3 member 5014. 1631.  2420 3518.  5156. 6246.  7202
 
 ``` r
 # make box plot
@@ -220,7 +220,7 @@ myclan %>% group_by(role) %>% summarize(mean = mean(donations), sd = sd(donation
     ##   role    mean    sd   min    Q1 median    Q3   max
     ##   <fct>  <dbl> <dbl> <int> <dbl>  <dbl> <dbl> <int>
     ## 1 leader 101.  137.      0   0       64 124     456
-    ## 2 elder   82.6  98.9     0  13.5     52  86     300
+    ## 2 elder   83.2  99.0     0  13.5     52  88     300
     ## 3 member  41.6  60.6     0   2       19  39.5   211
 
 ``` r
@@ -397,15 +397,15 @@ chests
 
 ### Clan data + Player data: Who is the best in clan?
 
-If you win more and lose less, obviously you would get a higher win
+If you win more and lose less, obviously you would get a higher winning
 rate. But, if you are at the lower arena with lower trophies, most
 likely you will meet rookie opponents, which makes you much more easily
 to win; meanwhile if you are at the higher arena with higher trophies,
 you will often meet experienced veteran opponents, even professional
 players – and eat a Loss.
 
-We want to put the win rate and trophies together to see who is the best
-player in a clan: more trophies with higher win rate.
+We want to put the winning rate and best trophies together to see who is
+the best player in a clan: more trophies with higher winning rate.
 
 ``` r
 # get all tags
@@ -423,7 +423,6 @@ name <- unlist(sapply(playerlist, FUN = `[`, "name"))
 wins <- unlist(sapply(playerlist, FUN = `[`, "wins"))
 losses <- unlist(sapply(playerlist, FUN = `[`, "losses"))
 best_trophies <- unlist(sapply(playerlist, FUN = `[`, "bestTrophies"))
-total_donation <- unlist(sapply(playerlist, FUN = `[`, "totalDonations"))
 role <- unlist(sapply(playerlist, FUN = `[`, "role"))
 # combine together as a data frame
 clanmates <- as.data.frame(cbind(name,role,wins,losses,best_trophies,total_donation))
@@ -433,7 +432,6 @@ rownames(clanmates) <- clanmates$name
 clanmates$wins <- as.numeric(clanmates$wins)
 clanmates$losses <- as.numeric(clanmates$losses)
 clanmates$best_trophies <- as.numeric(clanmates$best_trophies)
-clanmates$total_donation <- as.numeric(clanmates$total_donation)
 # calculate win rate
 clanmates <- clanmates %>% mutate(win_rate = wins/(wins+losses))
 
@@ -446,11 +444,44 @@ ggplot(clanmates, aes(x = best_trophies, y = win_rate)) +
 
 ![](README_files/figure-gfm/win%20rate-1.png)<!-- -->
 
-From this plot, we can see that some “member” players have win rate
-higher than 0.6 but all below 6000 trophies. Two players have win rate
-above 0.6 and above 7000 trophies.
+From this plot, we can see that some “member” players have winning rate
+higher than 0.65 but all below 6000 trophies.
 
 Only one player has win rate over 0.65 and above 8000 trophies: Yes,
 that’s me. :)
 
+We can count the number of players based on winning rate and best
+trophies.
+
+``` r
+clanmates <- clanmates %>% mutate(
+  Winning_rate_group = case_when(win_rate < 0.45 ~ 'bad skill',
+                           win_rate >= 0.45 & win_rate < 0.55 ~ 'normal skill',
+                           win_rate >= 0.55 & win_rate < 0.65 ~ 'good skill',
+                           win_rate >= 0.65 ~ 'excellent skill'), # creating winning rate group based on the range.
+  best_trophies_group = case_when(best_trophies < 5000 ~ 'low arena level',
+                                  best_trophies >= 5000 & best_trophies < 7000 ~ 'medium arena level',
+                                  best_trophies >= 7000 ~ 'high arena level') # creating arena level based on best trophies
+)
+# change data type and order it.
+clanmates$Winning_rate_group <- factor(clanmates$Winning_rate_group, levels = c('excellent skill','good skill','normal skill','bad skill'))
+clanmates$best_trophies_group <- factor(clanmates$best_trophies_group, levels = c('high arena level','medium arena level','low arena level'))
+# make two way table.
+table(clanmates$Winning_rate_group, clanmates$best_trophies_group)
+```
+
+    ##                  
+    ##                   high arena level medium arena level low arena level
+    ##   excellent skill                1                  2               0
+    ##   good skill                     3                  7               5
+    ##   normal skill                   6                 14               4
+    ##   bad skill                      0                  2               3
+
+From the two-way table, we can see that at each arena level, the number
+of players decreases when skill level increases. Most of the clanmates
+are in median arena level, indicating that my clan is not one of the top
+ranked clans. We have a long way to go.
+
 Hope you enjoy my project.
+
+:smiley:
