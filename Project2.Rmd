@@ -114,7 +114,7 @@ return(output)
 
 -   `player`
 
-This function enables you to get information in detail or the upcoming chests of a player based on player tag.
+This function enables you to get information in detail of a player or the upcoming chests based on player tag.
 
 ```{r player function}
 player = function(playertag, token, infotype = 'personal'){ 
@@ -216,9 +216,9 @@ ggplot(myclan, aes(x = role, y = days)) +
   labs(title = "Online frequency over roles")
 ```
 
-From these three plots, we can see that "leader" group has higher trophies indicating that these players have player for a long time and have better techniques. The "leader" group has a little bit more donations on average than "elder" group and "member" group, indicating that this group made more contributions to the clanmates. However, there are three "leaders" not shown more than 10 days, one of them even over 60 days. It's time to warn or demote them! Overall, the players in this clan are very active.
+From these three plots, we can see that "leader" group has higher trophies indicating that these players have player for a long time and may have better techniques. The "leader" group has more donations on average than "elder" group and "member" group, indicating that this group made more contributions to the clanmates. However, there are three "leaders" not shown more than 10 days, one of them even over 60 days. It's time to warn or demote them! Overall, the players in this clan are  active.
 
-Next, let's look at the relationship between players' exp and trophies. Each time the player makes donation or upgrades the card, he/she will gain some exp.
+Next, let's look at the relationship between players' exp and trophies. Each time the player makes donation or upgrades the card, he/she will gain some exp. Each time the player defeats opponent, he/she will gain trophies.
 
 ```{r exp over trophies}
 # make point plot
@@ -251,6 +251,8 @@ heatmap(heat,
         )
 
 ```
+
+We can see that top ranked players (with higher expLevel and more trophies) donated most cards while lower ranked players received most donated cards.
 
 When we consider the arena level and the roles, we can make a contingency table.
 
